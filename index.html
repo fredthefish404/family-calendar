@@ -14,887 +14,533 @@
     --text: #fffffe;
     --text-muted: #a7a9be;
     --accent: #ff8906;
-    --member1: #f25f4c; /* red-orange */
-    --member2: #3da9fc; /* sky blue */
-    --member3: #7bed9f; /* mint green */
-    --member1-bg: rgba(242,95,76,0.15);
-    --member2-bg: rgba(61,169,252,0.15);
-    --member3-bg: rgba(123,237,159,0.15);
-    --radius: 16px;
-    --radius-sm: 10px;
+    --m1: #f25f4c;
+    --m2: #3da9fc;
+    --m3: #7bed9f;
+    --m1-bg: rgba(242,95,76,0.15);
+    --m2-bg: rgba(61,169,252,0.15);
+    --m3-bg: rgba(123,237,159,0.15);
+    --rad: 16px;
+    --rad-sm: 10px;
   }
+  * { -webkit-box-sizing: border-box; box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Nunito', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+  .blobs { position: fixed; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; z-index: 0; overflow: hidden; }
+  .blob { position: absolute; border-radius: 50%; -webkit-filter: blur(100px); filter: blur(100px); opacity: 0.12; }
+  .b1 { width: 500px; height: 500px; background: var(--m1); top: -120px; left: -120px; }
+  .b2 { width: 400px; height: 400px; background: var(--m2); bottom: -100px; right: -100px; }
+  .b3 { width: 300px; height: 300px; background: var(--m3); top: 35%; left: 38%; }
 
-  body {
-    font-family: 'Nunito', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
+  .app { position: relative; z-index: 1; padding: 14px; max-width: 1400px; margin: 0 auto; }
 
-  /* Static background blobs - no animation for performance on older devices */
-  .bg-blobs {
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 0;
-    overflow: hidden;
-  }
-  .blob {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(100px);
-    opacity: 0.14;
-  }
-  .blob1 { width: 500px; height: 500px; background: var(--member1); top: -100px; left: -100px; }
-  .blob2 { width: 400px; height: 400px; background: var(--member2); bottom: -80px; right: -80px; }
-  .blob3 { width: 350px; height: 350px; background: var(--member3); top: 40%; left: 40%; }
-
-  .app {
-    position: relative;
-    z-index: 1;
-    display: grid;
-    grid-template-columns: 1fr 340px;
-    grid-template-rows: auto 1fr;
-    gap: 20px;
-    padding: 20px;
-    min-height: 100vh;
-    max-width: 1400px;
-    margin: 0 auto;
-  }
-
-  /* ── TOP BAR ── */
+  /* TOP BAR */
   .topbar {
-    grid-column: 1 / -1;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 16px 28px;
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
+    display: -webkit-box; display: -webkit-flex; display: flex;
+    -webkit-box-align: center; -webkit-align-items: center; align-items: center;
+    -webkit-box-pack: justify; -webkit-justify-content: space-between; justify-content: space-between;
+    -webkit-flex-wrap: wrap; flex-wrap: wrap;
+    gap: 10px;
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--rad);
+    padding: 13px 20px; margin-bottom: 14px;
   }
+  .tl { display: -webkit-box; display: -webkit-flex; display: flex; -webkit-box-align: center; -webkit-align-items: center; align-items: center; -webkit-flex-wrap: wrap; flex-wrap: wrap; gap: 10px; }
+  .tr { display: -webkit-box; display: -webkit-flex; display: flex; -webkit-box-align: center; -webkit-align-items: center; align-items: center; gap: 14px; }
 
-  .topbar-left { display: flex; align-items: center; gap: 16px; }
-
-  .app-title {
-    font-family: 'Fraunces', serif;
-    font-size: 1.6rem;
-    font-weight: 700;
-    letter-spacing: -0.5px;
-    color: var(--text);
-  }
+  .app-title { font-family: 'Fraunces', serif; font-size: 1.45rem; font-weight: 700; }
   .app-title span { color: var(--accent); font-style: italic; }
 
-  .member-pills { display: flex; gap: 8px; }
+  .pills { display: -webkit-box; display: -webkit-flex; display: flex; -webkit-flex-wrap: wrap; flex-wrap: wrap; gap: 5px; }
   .pill {
-    display: flex; align-items: center; gap: 6px;
-    padding: 5px 12px;
-    border-radius: 999px;
-    font-size: 0.78rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s;
-    border: 2px solid transparent;
-    user-select: none;
+    display: -webkit-inline-box; display: -webkit-inline-flex; display: inline-flex;
+    -webkit-box-align: center; -webkit-align-items: center; align-items: center; gap: 5px;
+    padding: 4px 11px; border-radius: 999px; font-size: 0.74rem; font-weight: 700;
+    cursor: pointer; border: 2px solid transparent; -webkit-user-select: none; user-select: none;
   }
-  .pill .dot { width: 8px; height: 8px; border-radius: 50%; }
-  .pill1 { background: var(--member1-bg); color: var(--member1); }
-  .pill1 .dot { background: var(--member1); }
-  .pill2 { background: var(--member2-bg); color: var(--member2); }
-  .pill2 .dot { background: var(--member2); }
-  .pill3 { background: var(--member3-bg); color: var(--member3); }
-  .pill3 .dot { background: var(--member3); }
-  .pill.inactive { opacity: 0.35; }
+  .pill.off { opacity: 0.3; }
+  .pill-dot { width: 7px; height: 7px; border-radius: 50%; display: inline-block; }
 
-  .topbar-right { display: flex; align-items: center; gap: 20px; }
-
-  #clock {
-    font-family: 'Fraunces', serif;
-    font-size: 2rem;
-    font-weight: 700;
-    letter-spacing: -1px;
-    line-height: 1;
+  .wx {
+    display: -webkit-box; display: -webkit-flex; display: flex;
+    -webkit-box-align: center; -webkit-align-items: center; align-items: center; gap: 8px;
+    background: var(--surface2); border: 1px solid var(--border); border-radius: var(--rad-sm); padding: 8px 13px;
   }
-  #date-display {
-    font-size: 0.78rem;
-    color: var(--text-muted);
-    font-weight: 600;
-    text-align: right;
+  .wx-icon { font-size: 1.5rem; }
+  .wx-temp { font-weight: 800; font-size: 0.95rem; line-height: 1; }
+  .wx-desc { font-size: 0.66rem; color: var(--text-muted); font-weight: 600; }
+  .wx-city { font-size: 0.63rem; color: var(--text-muted); }
+
+  #clock { font-family: 'Fraunces', serif; font-size: 1.75rem; font-weight: 700; letter-spacing: -1px; line-height: 1; }
+  #datestr { font-size: 0.7rem; color: var(--text-muted); font-weight: 600; text-align: right; }
+
+  /* BODY */
+  .body {
+    display: -webkit-box; display: -webkit-flex; display: flex;
+    gap: 14px; -webkit-box-align: start; -webkit-align-items: flex-start; align-items: flex-start;
   }
 
-  .weather-widget {
-    display: flex; align-items: center; gap: 10px;
-    background: var(--surface2);
-    border-radius: var(--radius-sm);
-    padding: 10px 16px;
-    border: 1px solid var(--border);
-    min-width: 140px;
+  /* CALENDAR */
+  .cal-panel {
+    -webkit-box-flex: 1; -webkit-flex: 1; flex: 1; min-width: 0;
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--rad); padding: 18px;
   }
-  .weather-icon { font-size: 1.8rem; }
-  .weather-info { display: flex; flex-direction: column; }
-  .weather-temp { font-weight: 800; font-size: 1.1rem; line-height: 1; }
-  .weather-desc { font-size: 0.72rem; color: var(--text-muted); font-weight: 600; }
-  .weather-location { font-size: 0.68rem; color: var(--text-muted); }
-
-  /* ── CALENDAR MAIN ── */
-  .calendar-panel {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-
   .cal-nav {
-    display: flex; align-items: center; justify-content: space-between;
-  }
-  .cal-month {
-    font-family: 'Fraunces', serif;
-    font-size: 1.6rem;
-    font-weight: 700;
-    letter-spacing: -0.5px;
-  }
-  .cal-year { color: var(--accent); }
-  .nav-btn {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    color: var(--text);
-    border-radius: var(--radius-sm);
-    width: 38px; height: 38px;
-    cursor: pointer;
-    font-size: 1rem;
-    transition: all 0.15s;
-    display: flex; align-items: center; justify-content: center;
-  }
-  .nav-btn:hover { background: var(--accent); border-color: var(--accent); }
-
-  .cal-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 6px; }
-
-  .day-header {
-    text-align: center;
-    font-size: 0.72rem;
-    font-weight: 800;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    padding-bottom: 6px;
-  }
-
-  .cal-day {
-    min-height: 80px;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 8px 6px 6px;
-    cursor: pointer;
-    transition: all 0.15s;
-    position: relative;
-    overflow: hidden;
-  }
-  .cal-day:hover { border-color: rgba(255,255,255,0.2); background: #2a2748; }
-  .cal-day.other-month { opacity: 0.3; }
-  .cal-day.today {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 1px var(--accent), inset 0 0 20px rgba(255,137,6,0.08);
-  }
-  .cal-day.today .day-num { color: var(--accent); font-weight: 900; }
-  .cal-day.selected { border-color: rgba(255,255,255,0.4); background: #2e2b50; }
-
-  .day-num {
-    font-size: 0.82rem;
-    font-weight: 700;
-    line-height: 1;
-    margin-bottom: 4px;
-  }
-
-  .day-events { display: flex; flex-direction: column; gap: 2px; }
-  .day-event {
-    font-size: 0.62rem;
-    font-weight: 700;
-    padding: 2px 5px;
-    border-radius: 4px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .ev-member1 { background: var(--member1-bg); color: var(--member1); border-left: 2px solid var(--member1); }
-  .ev-member2 { background: var(--member2-bg); color: var(--member2); border-left: 2px solid var(--member2); }
-  .ev-member3 { background: var(--member3-bg); color: var(--member3); border-left: 2px solid var(--member3); }
-  .ev-default { background: rgba(255,255,255,0.07); color: var(--text-muted); border-left: 2px solid var(--text-muted); }
-
-  .more-events {
-    font-size: 0.58rem;
-    color: var(--text-muted);
-    font-weight: 700;
-    margin-top: 2px;
-  }
-
-  /* ── RIGHT PANEL ── */
-  .right-panel {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  /* Upcoming events */
-  .upcoming-panel, .config-panel {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 20px;
-  }
-
-  .panel-title {
-    font-family: 'Fraunces', serif;
-    font-size: 1rem;
-    font-weight: 700;
+    display: -webkit-box; display: -webkit-flex; display: flex;
+    -webkit-box-align: center; -webkit-align-items: center; align-items: center;
+    -webkit-box-pack: justify; -webkit-justify-content: space-between; justify-content: space-between;
     margin-bottom: 14px;
-    display: flex; align-items: center; gap: 8px;
   }
-  .panel-title .icon { font-size: 1rem; }
-
-  .event-list { display: flex; flex-direction: column; gap: 8px; }
-
-  .event-card {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    padding: 10px 12px;
-    background: var(--surface2);
-    border-radius: var(--radius-sm);
-    border: 1px solid var(--border);
-    transition: all 0.15s;
-    animation: slideIn 0.3s ease both;
-  }
-  @keyframes slideIn {
-    from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  .event-card:hover { border-color: rgba(255,255,255,0.15); }
-
-  .event-color-bar { width: 3px; border-radius: 3px; align-self: stretch; flex-shrink: 0; }
-  .bar-member1 { background: var(--member1); }
-  .bar-member2 { background: var(--member2); }
-  .bar-member3 { background: var(--member3); }
-  .bar-default { background: var(--text-muted); }
-
-  .event-info { flex: 1; min-width: 0; }
-  .event-name {
-    font-size: 0.82rem;
-    font-weight: 700;
-    line-height: 1.3;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .event-meta {
-    font-size: 0.68rem;
-    color: var(--text-muted);
-    font-weight: 600;
-    margin-top: 2px;
-  }
-  .event-member-badge {
-    font-size: 0.62rem;
-    font-weight: 800;
-    padding: 2px 7px;
-    border-radius: 999px;
-    flex-shrink: 0;
-  }
-  .badge1 { background: var(--member1-bg); color: var(--member1); }
-  .badge2 { background: var(--member2-bg); color: var(--member2); }
-  .badge3 { background: var(--member3-bg); color: var(--member3); }
-
-  .no-events {
-    text-align: center;
-    color: var(--text-muted);
-    font-size: 0.82rem;
-    padding: 20px;
+  .cal-month { font-family: 'Fraunces', serif; font-size: 1.45rem; font-weight: 700; }
+  .cal-yr { color: var(--accent); }
+  .nav-btns { display: -webkit-box; display: -webkit-flex; display: flex; gap: 5px; }
+  .nav-btn {
+    background: var(--surface2); border: 1px solid var(--border); color: var(--text);
+    border-radius: var(--rad-sm); width: 35px; height: 35px; cursor: pointer;
+    font-size: 1rem; font-family: 'Nunito', sans-serif;
   }
 
-  /* Config panel */
-  .config-panel { }
-  .config-row { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
-  .config-label { font-size: 0.72rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; }
-  .config-input {
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    color: var(--text);
-    padding: 8px 12px;
-    font-family: 'Nunito', sans-serif;
-    font-size: 0.8rem;
-    font-weight: 600;
-    width: 100%;
-    transition: border-color 0.15s;
+  table.cal { width: 100%; border-collapse: separate; border-spacing: 3px; }
+  table.cal th { text-align: center; font-size: 0.66rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; padding-bottom: 5px; }
+  table.cal td {
+    width: 14.28%; vertical-align: top;
+    background: var(--surface2); border: 1px solid var(--border); border-radius: var(--rad-sm);
+    padding: 6px 5px 4px; cursor: pointer; height: 72px;
   }
-  .config-input:focus { outline: none; border-color: var(--accent); }
-  .config-input::placeholder { color: var(--text-muted); }
+  table.cal td.other { opacity: 0.27; }
+  table.cal td.today { border-color: var(--accent); }
+  table.cal td.sel { border-color: rgba(255,255,255,0.35); background: #2e2b50; }
 
-  .member-config { display: flex; flex-direction: column; gap: 6px; }
-  .member-row { display: flex; align-items: center; gap: 8px; }
-  .member-dot-input {
-    width: 28px; height: 28px;
-    border-radius: 50%;
-    border: none;
-    cursor: pointer;
-    padding: 0;
-    flex-shrink: 0;
+  .dn { font-size: 0.76rem; font-weight: 700; line-height: 1; margin-bottom: 3px; }
+  table.cal td.today .dn { color: var(--accent); font-weight: 900; }
+  .de { font-size: 0.57rem; font-weight: 700; padding: 1px 4px; border-radius: 3px; margin-bottom: 2px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .de1 { background: var(--m1-bg); color: var(--m1); border-left: 2px solid var(--m1); }
+  .de2 { background: var(--m2-bg); color: var(--m2); border-left: 2px solid var(--m2); }
+  .de3 { background: var(--m3-bg); color: var(--m3); border-left: 2px solid var(--m3); }
+  .de0 { background: rgba(255,255,255,0.07); color: var(--text-muted); border-left: 2px solid var(--text-muted); }
+  .dm { font-size: 0.53rem; color: var(--text-muted); font-weight: 700; }
+
+  /* SIDEBAR */
+  .sidebar { width: 310px; -webkit-flex-shrink: 0; flex-shrink: 0; display: -webkit-box; display: -webkit-flex; display: flex; -webkit-box-orient: vertical; -webkit-flex-direction: column; flex-direction: column; gap: 12px; }
+
+  .panel { background: var(--surface); border: 1px solid var(--border); border-radius: var(--rad); padding: 16px; }
+  .ptitle { font-family: 'Fraunces', serif; font-size: 0.92rem; font-weight: 700; margin-bottom: 11px; }
+
+  .evscroll { max-height: 260px; overflow-y: auto; }
+  .evc {
+    display: -webkit-box; display: -webkit-flex; display: flex;
+    -webkit-box-align: start; -webkit-align-items: flex-start; align-items: flex-start; gap: 7px;
+    padding: 8px 9px; background: var(--surface2); border: 1px solid var(--border);
+    border-radius: var(--rad-sm); margin-bottom: 6px;
   }
-  .member-name-input {
-    flex: 1;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    color: var(--text);
-    padding: 6px 10px;
-    font-family: 'Nunito', sans-serif;
-    font-size: 0.8rem;
-    font-weight: 700;
+  .evbar { width: 3px; border-radius: 3px; -webkit-align-self: stretch; align-self: stretch; -webkit-flex-shrink: 0; flex-shrink: 0; }
+  .bar1 { background: var(--m1); } .bar2 { background: var(--m2); } .bar3 { background: var(--m3); } .bar0 { background: var(--text-muted); }
+  .evi { -webkit-box-flex: 1; -webkit-flex: 1; flex: 1; min-width: 0; }
+  .evn { font-size: 0.78rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .evm { font-size: 0.64rem; color: var(--text-muted); font-weight: 600; margin-top: 2px; }
+  .evb { font-size: 0.58rem; font-weight: 800; padding: 2px 6px; border-radius: 999px; -webkit-flex-shrink: 0; flex-shrink: 0; white-space: nowrap; }
+  .b1c { background: var(--m1-bg); color: var(--m1); } .b2c { background: var(--m2-bg); color: var(--m2); } .b3c { background: var(--m3-bg); color: var(--m3); }
+  .noev { font-size: 0.78rem; color: var(--text-muted); text-align: center; padding: 14px 0; }
+
+  .clbl { font-size: 0.66rem; font-weight: 800; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 4px; display: block; }
+  .cgrp { margin-bottom: 11px; }
+  .cinp {
+    width: 100%; background: var(--surface2); border: 1px solid var(--border);
+    border-radius: var(--rad-sm); color: var(--text); padding: 7px 9px;
+    font-family: 'Nunito', sans-serif; font-size: 0.76rem; font-weight: 600;
   }
-  .member-name-input:focus { outline: none; border-color: var(--accent); }
+  .cinp:focus { outline: none; border-color: var(--accent); }
+  .cinp::-webkit-input-placeholder { color: var(--text-muted); }
 
-  .cal-id-input-row { display: flex; gap: 6px; }
-  .cal-id-input-row input { flex: 1; }
-  .remove-cal-btn {
-    background: rgba(242,95,76,0.15);
-    color: var(--member1);
-    border: none;
-    border-radius: var(--radius-sm);
-    padding: 0 10px;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: 700;
+  .mrow { display: -webkit-box; display: -webkit-flex; display: flex; -webkit-box-align: center; -webkit-align-items: center; align-items: center; gap: 6px; margin-bottom: 5px; }
+  .cpin { width: 26px; height: 26px; border-radius: 50%; border: none; padding: 0; cursor: pointer; -webkit-flex-shrink: 0; flex-shrink: 0; }
+  .mnin {
+    -webkit-box-flex: 1; -webkit-flex: 1; flex: 1;
+    background: var(--surface2); border: 1px solid var(--border); border-radius: var(--rad-sm);
+    color: var(--text); padding: 5px 8px; font-family: 'Nunito', sans-serif; font-size: 0.76rem; font-weight: 700;
   }
+  .mnin:focus { outline: none; border-color: var(--accent); }
 
-  .btn {
-    display: inline-flex; align-items: center; justify-content: center; gap: 6px;
-    padding: 9px 16px;
-    border-radius: var(--radius-sm);
-    font-family: 'Nunito', sans-serif;
-    font-size: 0.8rem;
-    font-weight: 800;
-    cursor: pointer;
-    transition: all 0.15s;
-    border: none;
-    width: 100%;
-    margin-top: 4px;
-  }
-  .btn-primary { background: var(--accent); color: #0f0e17; }
-  .btn-primary:hover { background: #ffaa3b; }
-  .btn-secondary { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
-  .btn-secondary:hover { border-color: rgba(255,255,255,0.2); }
+  .idrow { display: -webkit-box; display: -webkit-flex; display: flex; gap: 4px; margin-bottom: 5px; }
+  .idrow select { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--rad-sm); color: var(--text); padding: 4px 5px; font-size: 0.68rem; font-family: 'Nunito', sans-serif; }
+  .rmbtn { background: var(--m1-bg); color: var(--m1); border: none; border-radius: var(--rad-sm); padding: 0 8px; cursor: pointer; font-size: 0.82rem; font-weight: 700; -webkit-flex-shrink: 0; flex-shrink: 0; }
 
-  .status-msg {
-    font-size: 0.72rem;
-    font-weight: 700;
-    padding: 6px 10px;
-    border-radius: 6px;
-    margin-top: 8px;
-    display: none;
-  }
-  .status-msg.show { display: block; }
-  .status-msg.ok { background: rgba(123,237,159,0.15); color: var(--member3); }
-  .status-msg.err { background: rgba(242,95,76,0.15); color: var(--member1); }
-  .status-msg.loading { background: rgba(61,169,252,0.15); color: var(--member2); }
+  .div { height: 1px; background: var(--border); margin: 9px 0; }
+  .btn { display: block; width: 100%; padding: 8px 13px; border-radius: var(--rad-sm); font-family: 'Nunito', sans-serif; font-size: 0.76rem; font-weight: 800; cursor: pointer; border: none; margin-top: 4px; text-align: center; }
+  .btnp { background: var(--accent); color: #0f0e17; }
+  .btns { background: var(--surface2); color: var(--text); border: 1px solid var(--border); }
 
-  .divider { height: 1px; background: var(--border); margin: 10px 0; }
+  .stmsg { font-size: 0.68rem; font-weight: 700; padding: 5px 8px; border-radius: 6px; margin-top: 6px; display: none; }
+  .stmsg.show { display: block; }
+  .stmsg.ok { background: var(--m3-bg); color: var(--m3); }
+  .stmsg.err { background: var(--m1-bg); color: var(--m1); }
+  .stmsg.loading { background: var(--m2-bg); color: var(--m2); }
 
-  /* Scrollbar */
-  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar { width: 4px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 
-  .upcoming-scroll { max-height: 320px; overflow-y: auto; }
-
-  @media (max-width: 900px) {
-    .app { grid-template-columns: 1fr; }
-    .right-panel { grid-row: 3; }
+  @media (max-width: 780px) {
+    .body { -webkit-box-orient: vertical; -webkit-flex-direction: column; flex-direction: column; }
+    .sidebar { width: 100%; }
   }
 </style>
 </head>
 <body>
-
-<div class="bg-blobs">
-  <div class="blob blob1"></div>
-  <div class="blob blob2"></div>
-  <div class="blob blob3"></div>
+<div class="blobs">
+  <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
 </div>
-
 <div class="app">
-  <!-- TOP BAR -->
+
   <div class="topbar">
-    <div class="topbar-left">
+    <div class="tl">
       <div class="app-title">Family <span>Calendar</span></div>
-      <div class="member-pills" id="memberPills"></div>
+      <div class="pills" id="pills"></div>
     </div>
-    <div class="topbar-right">
-      <div class="weather-widget" id="weatherWidget">
-        <div class="weather-icon" id="weatherIcon">🌤️</div>
-        <div class="weather-info">
-          <div class="weather-temp" id="weatherTemp">--°F</div>
-          <div class="weather-desc" id="weatherDesc">Loading...</div>
-          <div class="weather-location" id="weatherLocation">Locating...</div>
+    <div class="tr">
+      <div class="wx">
+        <div class="wx-icon" id="wxIcon">&#127780;&#65039;</div>
+        <div>
+          <div class="wx-temp" id="wxTemp">--&deg;F</div>
+          <div class="wx-desc" id="wxDesc">Loading...</div>
+          <div class="wx-city" id="wxCity">Locating...</div>
         </div>
       </div>
       <div>
         <div id="clock">--:--</div>
-        <div id="date-display">Loading...</div>
+        <div id="datestr">Loading...</div>
       </div>
     </div>
   </div>
 
-  <!-- CALENDAR MAIN -->
-  <div class="calendar-panel">
-    <div class="cal-nav">
-      <div class="cal-month">
-        <span id="monthName">Month</span> <span class="cal-year" id="yearNum">2024</span>
+  <div class="body">
+    <div class="cal-panel">
+      <div class="cal-nav">
+        <div class="cal-month"><span id="mname">Month</span> <span class="cal-yr" id="ynum">2024</span></div>
+        <div class="nav-btns">
+          <button class="nav-btn" onclick="chMo(-1)">&#8249;</button>
+          <button class="nav-btn" onclick="goToday()">Today</button>
+          <button class="nav-btn" onclick="chMo(1)">&#8250;</button>
+        </div>
       </div>
-      <div style="display:flex;gap:6px;">
-        <button class="nav-btn" onclick="changeMonth(-1)">‹</button>
-        <button class="nav-btn" onclick="goToday()">Today</button>
-        <button class="nav-btn" onclick="changeMonth(1)">›</button>
-      </div>
-    </div>
-    <div class="cal-grid" id="calGrid">
-      <div class="day-header">Sun</div>
-      <div class="day-header">Mon</div>
-      <div class="day-header">Tue</div>
-      <div class="day-header">Wed</div>
-      <div class="day-header">Thu</div>
-      <div class="day-header">Fri</div>
-      <div class="day-header">Sat</div>
-    </div>
-  </div>
-
-  <!-- RIGHT PANEL -->
-  <div class="right-panel">
-    <!-- Upcoming Events -->
-    <div class="upcoming-panel">
-      <div class="panel-title"><span class="icon">📅</span> Upcoming Events</div>
-      <div class="event-list upcoming-scroll" id="upcomingList">
-        <div class="no-events">Add your Google API key &amp; Calendar IDs to get started.</div>
-      </div>
+      <table class="cal">
+        <thead><tr><th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th></tr></thead>
+        <tbody id="calBody"></tbody>
+      </table>
     </div>
 
-    <!-- Config -->
-    <div class="config-panel">
-      <div class="panel-title"><span class="icon">⚙️</span> Settings</div>
-
-      <div class="config-row">
-        <div class="config-label">Google API Key</div>
-        <input class="config-input" type="password" id="apiKeyInput" placeholder="AIza..." />
+    <div class="sidebar">
+      <div class="panel">
+        <div class="ptitle">&#128197; Upcoming Events</div>
+        <div class="evscroll" id="upList"><div class="noev">Configure settings below to get started.</div></div>
       </div>
-
-      <div class="config-row">
-        <div class="config-label">Family Members</div>
-        <div class="member-config" id="memberConfig"></div>
+      <div class="panel">
+        <div class="ptitle">&#9881; Settings</div>
+        <div class="cgrp">
+          <span class="clbl">Google API Key</span>
+          <input class="cinp" type="password" id="apiKey" placeholder="AIza..." />
+        </div>
+        <div class="cgrp">
+          <span class="clbl">Family Members</span>
+          <div id="memRows"></div>
+        </div>
+        <div class="div"></div>
+        <span class="clbl">Google Calendar IDs</span>
+        <div id="calRows"></div>
+        <button class="btn btns" onclick="addCalRow()" style="margin-top:5px;">+ Add Calendar</button>
+        <div class="div"></div>
+        <button class="btn btnp" onclick="doSync()">&#128260; Save &amp; Sync</button>
+        <div class="stmsg" id="stmsg"></div>
       </div>
-
-      <div class="divider"></div>
-
-      <div class="config-label" style="margin-bottom:8px;">Google Calendar IDs</div>
-      <div id="calIdRows"></div>
-      <button class="btn btn-secondary" onclick="addCalRow()" style="margin-top:6px;">+ Add Calendar</button>
-
-      <div class="divider"></div>
-
-      <button class="btn btn-primary" onclick="saveAndLoad()">🔄 Save &amp; Sync</button>
-      <div class="status-msg" id="statusMsg"></div>
     </div>
   </div>
 </div>
 
 <script>
-// ─── STATE ───────────────────────────────────────────
-const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-const DEFAULT_MEMBERS = [
-  { name: 'Member 1', color: '#f25f4c' },
-  { name: 'Member 2', color: '#3da9fc' },
-  { name: 'Member 3', color: '#7bed9f' },
-];
+var MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+var WDAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+var DEF_MEMBERS = [{name:'Member 1',color:'#f25f4c'},{name:'Member 2',color:'#3da9fc'},{name:'Member 3',color:'#7bed9f'}];
 
-let state = {
-  viewYear: new Date().getFullYear(),
-  viewMonth: new Date().getMonth(),
+var S = {
+  yr: new Date().getFullYear(),
+  mo: new Date().getMonth(),
   events: [],
-  members: JSON.parse(localStorage.getItem('fc_members') || JSON.stringify(DEFAULT_MEMBERS)),
+  members: tryParse('fc_members', DEF_MEMBERS),
   apiKey: localStorage.getItem('fc_apiKey') || '',
-  calIds: JSON.parse(localStorage.getItem('fc_calIds') || '[]'),
-  activeFilters: [0, 1, 2],
-  selectedDay: null,
+  calIds: tryParse('fc_calIds', []),
+  filters: [0,1,2],
+  selTd: null
 };
 
-// ─── CLOCK ───────────────────────────────────────────
-function updateClock() {
-  const now = new Date();
-  let h = now.getHours(), m = now.getMinutes();
-  const ampm = h >= 12 ? 'PM' : 'AM';
+function tryParse(key, def) {
+  try { var v = localStorage.getItem(key); return v ? JSON.parse(v) : def; } catch(e) { return def; }
+}
+
+/* CLOCK */
+function tick() {
+  var n = new Date(), h = n.getHours(), m = n.getMinutes(), ap = h >= 12 ? 'PM' : 'AM';
   h = h % 12 || 12;
-  document.getElementById('clock').textContent = `${h}:${String(m).padStart(2,'0')} ${ampm}`;
-  const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-  document.getElementById('date-display').textContent =
-    `${days[now.getDay()]}, ${MONTHS[now.getMonth()]} ${now.getDate()}, ${now.getFullYear()}`;
+  document.getElementById('clock').textContent = h + ':' + (m < 10 ? '0' : '') + m + ' ' + ap;
+  document.getElementById('datestr').textContent = WDAYS[n.getDay()] + ', ' + MONTHS[n.getMonth()] + ' ' + n.getDate() + ', ' + n.getFullYear();
 }
-setInterval(updateClock, 1000);
-updateClock();
+setInterval(tick, 1000); tick();
 
-// ─── WEATHER ─────────────────────────────────────────
-const WX_ICONS = {
-  0:'☀️',1:'🌤️',2:'⛅',3:'☁️',45:'🌫️',48:'🌫️',
-  51:'🌦️',53:'🌦️',55:'🌧️',61:'🌧️',63:'🌧️',65:'🌧️',
-  71:'🌨️',73:'❄️',75:'❄️',80:'🌦️',81:'🌧️',82:'⛈️',
-  95:'⛈️',96:'⛈️',99:'⛈️'
-};
-const WX_DESC = {
-  0:'Clear sky',1:'Mainly clear',2:'Partly cloudy',3:'Overcast',
-  45:'Foggy',48:'Icy fog',51:'Light drizzle',53:'Drizzle',55:'Heavy drizzle',
-  61:'Light rain',63:'Rain',65:'Heavy rain',71:'Light snow',73:'Snow',75:'Heavy snow',
-  80:'Rain showers',81:'Heavy showers',82:'Violent showers',95:'Thunderstorm',
-  96:'Thunderstorm',99:'Thunderstorm'
-};
+/* WEATHER */
+var WICO = {0:'☀️',1:'🌤️',2:'⛅',3:'☁️',45:'🌫️',48:'🌫️',51:'🌦️',53:'🌦️',55:'🌧️',61:'🌧️',63:'🌧️',65:'🌧️',71:'🌨️',73:'❄️',75:'❄️',80:'🌦️',81:'🌧️',82:'⛈️',95:'⛈️',96:'⛈️',99:'⛈️'};
+var WDSC = {0:'Clear',1:'Mainly clear',2:'Partly cloudy',3:'Overcast',45:'Foggy',48:'Icy fog',51:'Light drizzle',53:'Drizzle',55:'Heavy drizzle',61:'Light rain',63:'Rain',65:'Heavy rain',71:'Light snow',73:'Snow',75:'Heavy snow',80:'Showers',81:'Heavy showers',82:'Storms',95:'Thunderstorm',96:'Thunderstorm',99:'Thunderstorm'};
 
-function loadWeather() {
-  if (!navigator.geolocation) return;
-  navigator.geolocation.getCurrentPosition(async pos => {
-    const { latitude: lat, longitude: lon } = pos.coords;
-    try {
-      const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&temperature_unit=fahrenheit`);
-      const data = await res.json();
-      const cw = data.current_weather;
-      const code = cw.weathercode;
-      document.getElementById('weatherIcon').textContent = WX_ICONS[code] || '🌡️';
-      document.getElementById('weatherTemp').textContent = `${Math.round(cw.temperature)}°F`;
-      document.getElementById('weatherDesc').textContent = WX_DESC[code] || 'Weather';
-      // Reverse geocode for city name
-      try {
-        const geo = await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`);
-        const gd = await geo.json();
-        const city = gd.address.city || gd.address.town || gd.address.village || '';
-        document.getElementById('weatherLocation').textContent = city;
-      } catch(e) {}
-    } catch(e) {}
-  });
+function loadWx() {
+  if (!navigator.geolocation) { document.getElementById('wxDesc').textContent = 'No location'; return; }
+  navigator.geolocation.getCurrentPosition(function(pos) {
+    var lat = pos.coords.latitude, lon = pos.coords.longitude;
+    fetch('https://api.open-meteo.com/v1/forecast?latitude=' + lat + '&longitude=' + lon + '&current_weather=true&temperature_unit=fahrenheit')
+      .then(function(r) { return r.json(); })
+      .then(function(d) {
+        var cw = d.current_weather, code = cw.weathercode;
+        document.getElementById('wxIcon').textContent = WICO[code] || '🌡️';
+        document.getElementById('wxTemp').textContent = Math.round(cw.temperature) + '°F';
+        document.getElementById('wxDesc').textContent = WDSC[code] || 'Weather';
+        fetch('https://nominatim.openstreetmap.org/reverse?lat=' + lat + '&lon=' + lon + '&format=json')
+          .then(function(r) { return r.json(); })
+          .then(function(g) { document.getElementById('wxCity').textContent = (g.address && (g.address.city || g.address.town || g.address.village)) || ''; })
+          .catch(function(){});
+      }).catch(function() { document.getElementById('wxDesc').textContent = 'Unavailable'; });
+  }, function() { document.getElementById('wxDesc').textContent = 'Location denied'; });
 }
-loadWeather();
-setInterval(loadWeather, 15 * 60 * 1000);
+loadWx(); setInterval(loadWx, 900000);
 
-// ─── MEMBER PILLS ─────────────────────────────────────
+/* HELPERS */
+function hRgba(hex, a) {
+  var r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
+  return 'rgba('+r+','+g+','+b+','+a+')';
+}
+function evcls(mi) { return mi===0?'de1':mi===1?'de2':mi===2?'de3':'de0'; }
+function barcls(mi) { return mi===0?'bar1':mi===1?'bar2':mi===2?'bar3':'bar0'; }
+function badcls(mi) { return mi===0?'b1c':mi===1?'b2c':mi===2?'b3c':''; }
+function pad2(n) { return n < 10 ? '0' + n : '' + n; }
+
+/* PILLS */
 function renderPills() {
-  const container = document.getElementById('memberPills');
-  container.innerHTML = '';
-  state.members.forEach((m, i) => {
-    const p = document.createElement('div');
-    p.className = `pill ${state.activeFilters.includes(i) ? '' : 'inactive'}`;
-    p.style.background = hexToRgba(m.color, 0.15);
+  var c = document.getElementById('pills'); c.innerHTML = '';
+  for (var i = 0; i < S.members.length; i++) {
+    var m = S.members[i];
+    var p = document.createElement('div');
+    var active = S.filters.indexOf(i) !== -1;
+    p.className = 'pill' + (active ? '' : ' off');
+    p.style.background = hRgba(m.color, 0.15);
     p.style.color = m.color;
-    p.style.borderColor = state.activeFilters.includes(i) ? m.color : 'transparent';
-    p.innerHTML = `<span class="dot" style="background:${m.color}"></span>${m.name}`;
-    p.onclick = () => {
-      if (state.activeFilters.includes(i)) {
-        if (state.activeFilters.length > 1) state.activeFilters = state.activeFilters.filter(x => x !== i);
-      } else {
-        state.activeFilters.push(i);
-      }
-      renderPills();
-      renderCalendar();
-      renderUpcoming();
-    };
-    container.appendChild(p);
-  });
-}
-function hexToRgba(hex, a) {
-  const r = parseInt(hex.slice(1,3),16), g = parseInt(hex.slice(3,5),16), b = parseInt(hex.slice(5,7),16);
-  return `rgba(${r},${g},${b},${a})`;
-}
-
-// ─── MEMBER CONFIG ────────────────────────────────────
-function renderMemberConfig() {
-  const c = document.getElementById('memberConfig');
-  c.innerHTML = '';
-  state.members.forEach((m, i) => {
-    const row = document.createElement('div');
-    row.className = 'member-row';
-    row.innerHTML = `
-      <input type="color" class="member-dot-input" value="${m.color}" onchange="updateMemberColor(${i}, this.value)" />
-      <input class="member-name-input" type="text" value="${m.name}" placeholder="Name" oninput="updateMemberName(${i}, this.value)" />
-    `;
-    c.appendChild(row);
-  });
-}
-function updateMemberColor(i, val) { state.members[i].color = val; renderPills(); renderCalendar(); renderUpcoming(); }
-function updateMemberName(i, val) { state.members[i].name = val; renderPills(); renderCalendar(); renderUpcoming(); }
-
-// ─── CAL ID ROWS ─────────────────────────────────────
-function renderCalIdRows() {
-  const container = document.getElementById('calIdRows');
-  container.innerHTML = '';
-  if (state.calIds.length === 0) { addCalRow(); return; }
-  state.calIds.forEach((c, i) => {
-    const row = document.createElement('div');
-    row.className = 'config-row';
-    row.style.marginBottom = '6px';
-    row.innerHTML = `
-      <div style="display:flex;align-items:center;gap:4px;margin-bottom:3px;">
-        <span class="config-label" style="margin:0;">Calendar ${i+1}</span>
-        <select style="background:var(--surface2);border:1px solid var(--border);border-radius:6px;color:var(--text);padding:2px 6px;font-size:0.7rem;font-family:Nunito,sans-serif;" onchange="state.calIds[${i}].member=parseInt(this.value)">
-          ${state.members.map((m,mi)=>`<option value="${mi}" ${c.member===mi?'selected':''}>${m.name}</option>`).join('')}
-          <option value="-1" ${c.member===-1?'selected':''}>All Members</option>
-        </select>
-      </div>
-      <div class="cal-id-input-row">
-        <input class="config-input" type="text" value="${c.id}" placeholder="email@group.calendar.google.com" oninput="state.calIds[${i}].id=this.value" />
-        <button class="remove-cal-btn" onclick="removeCalRow(${i})">✕</button>
-      </div>
-    `;
-    container.appendChild(row);
-  });
-}
-function addCalRow() { state.calIds.push({ id: '', member: 0 }); renderCalIdRows(); }
-function removeCalRow(i) { state.calIds.splice(i, 1); renderCalIdRows(); }
-
-// ─── GOOGLE CALENDAR FETCH ────────────────────────────
-async function fetchGoogleCalendar(calId, apiKey) {
-  const now = new Date();
-  const start = new Date(now.getFullYear(), now.getMonth() - 1, 1).toISOString();
-  const end = new Date(now.getFullYear(), now.getMonth() + 3, 1).toISOString();
-  const url = `https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(calId)}/events?key=${apiKey}&timeMin=${start}&timeMax=${end}&singleEvents=true&orderBy=startTime&maxResults=250`;
-  const res = await fetch(url);
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  return await res.json();
-}
-
-function showStatus(msg, type) {
-  const el = document.getElementById('statusMsg');
-  el.textContent = msg;
-  el.className = `status-msg show ${type}`;
-}
-
-async function saveAndLoad() {
-  // Save settings
-  localStorage.setItem('fc_members', JSON.stringify(state.members));
-  localStorage.setItem('fc_apiKey', document.getElementById('apiKeyInput').value.trim());
-  localStorage.setItem('fc_calIds', JSON.stringify(state.calIds));
-  state.apiKey = document.getElementById('apiKeyInput').value.trim();
-
-  if (!state.apiKey) { showStatus('Please enter your Google API key.', 'err'); return; }
-  if (state.calIds.every(c => !c.id.trim())) { showStatus('Please add at least one Calendar ID.', 'err'); return; }
-
-  showStatus('Syncing calendars...', 'loading');
-  state.events = [];
-
-  let errors = 0;
-  for (const cal of state.calIds) {
-    if (!cal.id.trim()) continue;
-    try {
-      const data = await fetchGoogleCalendar(cal.id.trim(), state.apiKey);
-      const items = (data.items || []).map(ev => ({
-        id: ev.id,
-        title: ev.summary || '(No title)',
-        start: ev.start.dateTime || ev.start.date,
-        end: ev.end?.dateTime || ev.end?.date,
-        allDay: !ev.start.dateTime,
-        member: cal.member,
-      }));
-      state.events.push(...items);
-    } catch(e) { errors++; }
-  }
-
-  renderCalendar();
-  renderUpcoming();
-  renderPills();
-
-  if (errors > 0 && state.events.length === 0) {
-    showStatus(`Failed to load calendars. Check your API key and Calendar IDs.`, 'err');
-  } else if (errors > 0) {
-    showStatus(`Synced with ${errors} calendar error(s). ${state.events.length} events loaded.`, 'err');
-  } else {
-    showStatus(`✓ Synced! ${state.events.length} events loaded.`, 'ok');
+    p.style.borderColor = active ? m.color : 'transparent';
+    var dot = document.createElement('span'); dot.className = 'pill-dot'; dot.style.background = m.color;
+    p.appendChild(dot);
+    p.appendChild(document.createTextNode(m.name));
+    p.onclick = (function(idx) {
+      return function() {
+        var fi = S.filters.indexOf(idx);
+        if (fi !== -1) { if (S.filters.length > 1) S.filters.splice(fi, 1); }
+        else { S.filters.push(idx); }
+        renderPills(); renderCal(); renderUp();
+      };
+    })(i);
+    c.appendChild(p);
   }
 }
 
-// ─── CALENDAR RENDER ──────────────────────────────────
-function eventMemberClass(memberIdx) {
-  if (memberIdx === 0) return 'ev-member1';
-  if (memberIdx === 1) return 'ev-member2';
-  if (memberIdx === 2) return 'ev-member3';
-  return 'ev-default';
-}
-function barClass(memberIdx) {
-  if (memberIdx === 0) return 'bar-member1';
-  if (memberIdx === 1) return 'bar-member2';
-  if (memberIdx === 2) return 'bar-member3';
-  return 'bar-default';
-}
-function badgeClass(memberIdx) {
-  if (memberIdx === 0) return 'badge1';
-  if (memberIdx === 1) return 'badge2';
-  if (memberIdx === 2) return 'badge3';
-  return '';
-}
-
-function getEventsForDay(y, m, d) {
-  const target = `${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-  return state.events.filter(ev => {
-    if (!state.activeFilters.includes(ev.member) && ev.member !== -1) return false;
-    const evDate = (ev.start || '').slice(0, 10);
-    return evDate === target;
-  });
-}
-
-function renderCalendar() {
-  const grid = document.getElementById('calGrid');
-  // Remove day cells only
-  const existing = grid.querySelectorAll('.cal-day');
-  existing.forEach(el => el.remove());
-
-  document.getElementById('monthName').textContent = MONTHS[state.viewMonth];
-  document.getElementById('yearNum').textContent = state.viewYear;
-
-  const firstDay = new Date(state.viewYear, state.viewMonth, 1).getDay();
-  const daysInMonth = new Date(state.viewYear, state.viewMonth + 1, 0).getDate();
-  const daysInPrev = new Date(state.viewYear, state.viewMonth, 0).getDate();
-  const today = new Date();
-
-  let cells = [];
-  // Prev month fill
-  for (let i = firstDay - 1; i >= 0; i--) cells.push({ d: daysInPrev - i, m: state.viewMonth - 1, y: state.viewYear, other: true });
-  // Current
-  for (let i = 1; i <= daysInMonth; i++) cells.push({ d: i, m: state.viewMonth, y: state.viewYear, other: false });
-  // Next month fill
-  const remaining = 42 - cells.length;
-  for (let i = 1; i <= remaining; i++) cells.push({ d: i, m: state.viewMonth + 1, y: state.viewYear, other: true });
-
-  cells.forEach(cell => {
-    const div = document.createElement('div');
-    div.className = 'cal-day';
-    if (cell.other) div.classList.add('other-month');
-    const isToday = !cell.other && cell.d === today.getDate() && state.viewMonth === today.getMonth() && state.viewYear === today.getFullYear();
-    if (isToday) div.classList.add('today');
-
-    const dayEvents = cell.other ? [] : getEventsForDay(cell.y, cell.m, cell.d);
-    const maxShow = 2;
-    const evHtml = dayEvents.slice(0, maxShow).map(ev =>
-      `<div class="day-event ${eventMemberClass(ev.member)}">${ev.title}</div>`
-    ).join('');
-    const more = dayEvents.length > maxShow ? `<div class="more-events">+${dayEvents.length - maxShow} more</div>` : '';
-
-    div.innerHTML = `<div class="day-num">${cell.d}</div><div class="day-events">${evHtml}${more}</div>`;
-    div.onclick = () => {
-      if (!cell.other) { state.selectedDay = cell; highlightDay(div); showDayEvents(cell, dayEvents); }
-    };
-    grid.appendChild(div);
-  });
-}
-
-function highlightDay(el) {
-  document.querySelectorAll('.cal-day.selected').forEach(d => d.classList.remove('selected'));
-  el.classList.add('selected');
-}
-
-function showDayEvents(cell, events) {
-  // Show in upcoming panel temporarily
-  const list = document.getElementById('upcomingList');
-  const dateStr = `${MONTHS[cell.m]} ${cell.d}, ${cell.y}`;
-  if (events.length === 0) {
-    list.innerHTML = `<div class="no-events">No events on ${dateStr}</div>`;
-    return;
+/* MEMBER ROWS */
+function renderMemRows() {
+  var c = document.getElementById('memRows'); c.innerHTML = '';
+  for (var i = 0; i < S.members.length; i++) {
+    var m = S.members[i];
+    var row = document.createElement('div'); row.className = 'mrow';
+    var ci = document.createElement('input'); ci.type = 'color'; ci.className = 'cpin'; ci.value = m.color;
+    ci.onchange = (function(idx) { return function() { S.members[idx].color = this.value; renderPills(); renderCal(); renderUp(); }; })(i);
+    var ni = document.createElement('input'); ni.type = 'text'; ni.className = 'mnin'; ni.value = m.name; ni.placeholder = 'Name';
+    ni.oninput = (function(idx) { return function() { S.members[idx].name = this.value; renderPills(); renderCal(); renderUp(); }; })(i);
+    row.appendChild(ci); row.appendChild(ni); c.appendChild(row);
   }
-  list.innerHTML = `<div style="font-size:0.72rem;font-weight:800;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">${dateStr}</div>`;
-  events.forEach((ev, idx) => {
-    const card = buildEventCard(ev, idx);
-    list.appendChild(card);
-  });
 }
 
-// ─── UPCOMING EVENTS ──────────────────────────────────
-function renderUpcoming() {
-  const list = document.getElementById('upcomingList');
-  const now = new Date(); now.setHours(0,0,0,0);
-  const upcoming = state.events
-    .filter(ev => {
-      if (!state.activeFilters.includes(ev.member) && ev.member !== -1) return false;
-      const d = new Date(ev.start);
-      return d >= now;
-    })
-    .sort((a,b) => new Date(a.start) - new Date(b.start))
-    .slice(0, 15);
+/* CAL ID ROWS */
+function renderCalRows() {
+  var c = document.getElementById('calRows'); c.innerHTML = '';
+  if (S.calIds.length === 0) { addCalRow(); return; }
+  for (var i = 0; i < S.calIds.length; i++) {
+    var cal = S.calIds[i];
+    var wrap = document.createElement('div'); wrap.style.marginBottom = '7px';
+    var lrow = document.createElement('div'); lrow.style.display = 'flex'; lrow.style.alignItems = 'center'; lrow.style.gap = '5px'; lrow.style.marginBottom = '3px';
+    var lbl = document.createElement('span'); lbl.className = 'clbl'; lbl.style.margin = '0'; lbl.textContent = 'Calendar ' + (i+1);
+    var sel = document.createElement('select');
+    for (var mi = 0; mi < S.members.length; mi++) {
+      var opt = document.createElement('option'); opt.value = mi; opt.textContent = S.members[mi].name;
+      if (cal.member === mi) opt.selected = true; sel.appendChild(opt);
+    }
+    var aopt = document.createElement('option'); aopt.value = '-1'; aopt.textContent = 'All';
+    if (cal.member === -1) aopt.selected = true; sel.appendChild(aopt);
+    sel.onchange = (function(idx) { return function() { S.calIds[idx].member = parseInt(this.value); }; })(i);
+    lrow.appendChild(lbl); lrow.appendChild(sel);
+    var irow = document.createElement('div'); irow.className = 'idrow';
+    var inp = document.createElement('input'); inp.className = 'cinp'; inp.type = 'text'; inp.style.flex = '1'; inp.value = cal.id; inp.placeholder = 'email@group.calendar.google.com';
+    inp.oninput = (function(idx) { return function() { S.calIds[idx].id = this.value; }; })(i);
+    var rm = document.createElement('button'); rm.className = 'rmbtn'; rm.textContent = '\u2715';
+    rm.onclick = (function(idx) { return function() { S.calIds.splice(idx, 1); renderCalRows(); }; })(i);
+    irow.appendChild(inp); irow.appendChild(rm);
+    wrap.appendChild(lrow); wrap.appendChild(irow); c.appendChild(wrap);
+  }
+}
+function addCalRow() { S.calIds.push({id:'', member:0}); renderCalRows(); }
 
+/* STATUS */
+function showSt(msg, type) { var el = document.getElementById('stmsg'); el.textContent = msg; el.className = 'stmsg show ' + type; }
+
+/* SYNC */
+function doSync() {
+  S.apiKey = document.getElementById('apiKey').value.trim();
+  localStorage.setItem('fc_members', JSON.stringify(S.members));
+  localStorage.setItem('fc_apiKey', S.apiKey);
+  localStorage.setItem('fc_calIds', JSON.stringify(S.calIds));
+  if (!S.apiKey) { showSt('Please enter your Google API key.', 'err'); return; }
+  var active = []; for (var i = 0; i < S.calIds.length; i++) { if (S.calIds[i].id.trim()) active.push(S.calIds[i]); }
+  if (!active.length) { showSt('Please add at least one Calendar ID.', 'err'); return; }
+  showSt('Syncing...', 'loading');
+  S.events = [];
+  var now = new Date();
+  var tMin = new Date(now.getFullYear(), now.getMonth()-1, 1).toISOString();
+  var tMax = new Date(now.getFullYear(), now.getMonth()+3, 1).toISOString();
+  var done = 0, errs = 0, total = active.length;
+
+  function finish() {
+    renderCal(); renderUp(); renderPills();
+    if (errs > 0 && S.events.length === 0) showSt('Failed. Check your API key & Calendar IDs.', 'err');
+    else if (errs > 0) showSt('Synced with ' + errs + ' error(s). ' + S.events.length + ' events.', 'err');
+    else showSt('\u2713 Synced! ' + S.events.length + ' events loaded.', 'ok');
+  }
+
+  for (var j = 0; j < active.length; j++) {
+    (function(cal) {
+      var url = 'https://www.googleapis.com/calendar/v3/calendars/' + encodeURIComponent(cal.id.trim()) + '/events?key=' + S.apiKey + '&timeMin=' + tMin + '&timeMax=' + tMax + '&singleEvents=true&orderBy=startTime&maxResults=250';
+      fetch(url).then(function(r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+      }).then(function(data) {
+        var items = data.items || [];
+        for (var k = 0; k < items.length; k++) {
+          var ev = items[k];
+          S.events.push({ id: ev.id, title: ev.summary || '(No title)', start: ev.start.dateTime || ev.start.date, end: (ev.end && (ev.end.dateTime || ev.end.date)) || '', allDay: !ev.start.dateTime, member: cal.member });
+        }
+        done++; if (done + errs === total) finish();
+      }).catch(function() { errs++; done++; if (done + errs === total + errs) finish(); });
+    })(active[j]);
+  }
+}
+
+/* EVENTS FOR DAY */
+function evForDay(y, m, d) {
+  var target = y + '-' + pad2(m+1) + '-' + pad2(d);
+  var out = [];
+  for (var i = 0; i < S.events.length; i++) {
+    var ev = S.events[i];
+    if (S.filters.indexOf(ev.member) === -1 && ev.member !== -1) continue;
+    if ((ev.start || '').slice(0,10) === target) out.push(ev);
+  }
+  return out;
+}
+
+/* RENDER CALENDAR */
+function renderCal() {
+  document.getElementById('mname').textContent = MONTHS[S.mo];
+  document.getElementById('ynum').textContent = S.yr;
+  var tbody = document.getElementById('calBody'); tbody.innerHTML = '';
+  var firstDay = new Date(S.yr, S.mo, 1).getDay();
+  var dim = new Date(S.yr, S.mo+1, 0).getDate();
+  var diPrev = new Date(S.yr, S.mo, 0).getDate();
+  var td = new Date(), tdy = td.getFullYear(), tdm = td.getMonth(), tdd = td.getDate();
+  var cells = [];
+  for (var i = firstDay-1; i >= 0; i--) cells.push({d: diPrev-i, m: S.mo-1, y: S.yr, other: true});
+  for (var d = 1; d <= dim; d++) cells.push({d: d, m: S.mo, y: S.yr, other: false});
+  var rem = 42 - cells.length;
+  for (var j = 1; j <= rem; j++) cells.push({d: j, m: S.mo+1, y: S.yr, other: true});
+
+  for (var row = 0; row < 6; row++) {
+    var tr = document.createElement('tr');
+    for (var col = 0; col < 7; col++) {
+      var cell = cells[row*7+col];
+      var tdEl = document.createElement('td');
+      var cls = cell.other ? 'other' : '';
+      var isToday = !cell.other && cell.d === tdd && S.mo === tdm && S.yr === tdy;
+      if (isToday) cls += (cls ? ' ' : '') + 'today';
+      tdEl.className = cls;
+      var evs = cell.other ? [] : evForDay(cell.y, cell.m, cell.d);
+      var html = '<div class="dn">' + cell.d + '</div>';
+      for (var ei = 0; ei < Math.min(evs.length, 2); ei++) html += '<div class="de ' + evcls(evs[ei].member) + '">' + evs[ei].title + '</div>';
+      if (evs.length > 2) html += '<div class="dm">+' + (evs.length-2) + ' more</div>';
+      tdEl.innerHTML = html;
+      tdEl.onclick = (function(c, evArr) {
+        return function() {
+          if (c.other) return;
+          if (S.selTd) { S.selTd.className = S.selTd.className.replace(/ sel/g,'').replace(/sel/g,'').trim(); }
+          this.className = (this.className ? this.className + ' sel' : 'sel');
+          S.selTd = this;
+          showDay(c, evArr);
+        };
+      })(cell, evs);
+      tr.appendChild(tdEl);
+    }
+    tbody.appendChild(tr);
+  }
+}
+
+/* SHOW DAY EVENTS */
+function showDay(cell, evs) {
+  var list = document.getElementById('upList');
+  var ds = MONTHS[cell.m] + ' ' + cell.d + ', ' + cell.y;
+  if (!evs.length) { list.innerHTML = '<div class="noev">No events on ' + ds + '</div>'; return; }
+  list.innerHTML = '<div style="font-size:0.64rem;font-weight:800;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:7px;">' + ds + '</div>';
+  for (var i = 0; i < evs.length; i++) list.appendChild(buildCard(evs[i]));
+}
+
+/* UPCOMING */
+function renderUp() {
+  var list = document.getElementById('upList');
+  var now = new Date(); now.setHours(0,0,0,0);
+  var up = [];
+  for (var i = 0; i < S.events.length; i++) {
+    var ev = S.events[i];
+    if (S.filters.indexOf(ev.member) === -1 && ev.member !== -1) continue;
+    if (new Date(ev.start) >= now) up.push(ev);
+  }
+  up.sort(function(a,b){ return new Date(a.start)-new Date(b.start); });
+  up = up.slice(0, 15);
   list.innerHTML = '';
-  if (upcoming.length === 0) {
-    list.innerHTML = '<div class="no-events">No upcoming events found.</div>';
-    return;
-  }
-  upcoming.forEach((ev, idx) => {
-    const card = buildEventCard(ev, idx);
-    list.appendChild(card);
-  });
+  if (!up.length) { list.innerHTML = '<div class="noev">No upcoming events.</div>'; return; }
+  for (var j = 0; j < up.length; j++) list.appendChild(buildCard(up[j]));
 }
 
-function buildEventCard(ev, idx) {
-  const card = document.createElement('div');
-  card.className = 'event-card';
-  card.style.animationDelay = `${idx * 40}ms`;
-  const d = new Date(ev.start);
-  const dateStr = ev.allDay
-    ? d.toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric' })
-    : d.toLocaleDateString('en-US', { weekday:'short', month:'short', day:'numeric' }) + ' · ' +
-      d.toLocaleTimeString('en-US', { hour:'numeric', minute:'2-digit' });
-  const memberName = ev.member >= 0 && ev.member < state.members.length ? state.members[ev.member].name : '';
-  card.innerHTML = `
-    <div class="event-color-bar ${barClass(ev.member)}"></div>
-    <div class="event-info">
-      <div class="event-name">${ev.title}</div>
-      <div class="event-meta">${dateStr}</div>
-    </div>
-    ${memberName ? `<span class="event-member-badge ${badgeClass(ev.member)}">${memberName}</span>` : ''}
-  `;
+function buildCard(ev) {
+  var card = document.createElement('div'); card.className = 'evc';
+  var bar = document.createElement('div'); bar.className = 'evbar ' + barcls(ev.member);
+  var info = document.createElement('div'); info.className = 'evi';
+  var d = new Date(ev.start);
+  var ds = ev.allDay
+    ? d.toLocaleDateString('en-US', {weekday:'short', month:'short', day:'numeric'})
+    : d.toLocaleDateString('en-US', {weekday:'short', month:'short', day:'numeric'}) + ' \u00b7 ' + d.toLocaleTimeString('en-US', {hour:'numeric', minute:'2-digit'});
+  info.innerHTML = '<div class="evn">' + ev.title + '</div><div class="evm">' + ds + '</div>';
+  card.appendChild(bar); card.appendChild(info);
+  var mn = (ev.member >= 0 && ev.member < S.members.length) ? S.members[ev.member].name : '';
+  if (mn) { var b = document.createElement('span'); b.className = 'evb ' + badcls(ev.member); b.textContent = mn; card.appendChild(b); }
   return card;
 }
 
-// ─── MONTH NAV ────────────────────────────────────────
-function changeMonth(delta) {
-  state.viewMonth += delta;
-  if (state.viewMonth > 11) { state.viewMonth = 0; state.viewYear++; }
-  if (state.viewMonth < 0) { state.viewMonth = 11; state.viewYear--; }
-  renderCalendar();
-  renderUpcoming();
+/* NAV */
+function chMo(d) {
+  S.mo += d;
+  if (S.mo > 11) { S.mo = 0; S.yr++; }
+  if (S.mo < 0) { S.mo = 11; S.yr--; }
+  renderCal(); renderUp();
 }
-function goToday() {
-  state.viewMonth = new Date().getMonth();
-  state.viewYear = new Date().getFullYear();
-  renderCalendar();
-  renderUpcoming();
-}
+function goToday() { S.yr = new Date().getFullYear(); S.mo = new Date().getMonth(); renderCal(); renderUp(); }
 
-// ─── INIT ─────────────────────────────────────────────
-function init() {
-  // Load saved values
-  const savedKey = localStorage.getItem('fc_apiKey') || '';
-  document.getElementById('apiKeyInput').value = savedKey;
-  state.apiKey = savedKey;
-  state.calIds = JSON.parse(localStorage.getItem('fc_calIds') || '[]');
-  state.members = JSON.parse(localStorage.getItem('fc_members') || JSON.stringify(DEFAULT_MEMBERS));
-
-  renderMemberConfig();
-  renderCalIdRows();
-  renderPills();
-  renderCalendar();
-  renderUpcoming();
-
-  // Auto-sync if we have saved credentials
-  if (savedKey && state.calIds.some(c => c.id.trim())) {
-    saveAndLoad();
-  }
-}
-
-init();
+/* INIT */
+document.getElementById('apiKey').value = S.apiKey;
+renderMemRows(); renderCalRows(); renderPills(); renderCal(); renderUp();
+if (S.apiKey) { var hasId = false; for (var ii = 0; ii < S.calIds.length; ii++) { if (S.calIds[ii].id.trim()) { hasId = true; break; } } if (hasId) doSync(); }
 </script>
 </body>
 </html>
